@@ -8,17 +8,37 @@
     <meta charset="UTF-8" />
     <title>Toy Story Hidden Popups</title>
     <style>
-      body {
-        margin: 0;
-        height: 100dvh;
-        background: url("https://pitroo.github.io/toy/13.jpeg") no-repeat center
-          center fixed;
-        background-size: cover;
-        font-family: Arial, sans-serif;
-        overflow: hidden;
-        touch-action: manipulation;
+        body {
+          <div class="bg-layer"></div>
+    margin: 0;
+    height: 100dvh;
+    background: url("https://pitroo.github.io/toy/13.jpeg") no-repeat center center;
+    background-size: cover;
+    background-attachment: scroll; /* penting untuk HP */
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    touch-action: manipulation;
       }
+.bg-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 
+    background: url("https://pitroo.github.io/toy/13.jpeg") no-repeat center center;
+    background-size: cover;
+
+    z-index: -1;
+    transform: scale(1.05); /* sedikit zoom biar cinematic */
+}
+      .bg-layer::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.1);
+}
       .cloud {
         position: absolute;
         background: white;
