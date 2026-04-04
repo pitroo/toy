@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta charset="UTF-8" />
+    <title>Toy Story Hidden Popups</title>
+    <style>
+      body {
+        margin: 0;
+        height: 100dvh;
+        background: url("https://i.imgur.com/8wKQZ5L.jpg") no-repeat center
+          center fixed;
+        background-size: cover;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+        touch-action: manipulation;
+      }
+
+      .cloud {
+        position: absolute;
+        background: white;
+        border-radius: 50px;
+        padding: 10px 14px;
+        font-size: 20px;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .cloud:hover {
+        transform: scale(1.1);
+      }
+
+      .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        border: 4px solid #ffcc00;
+        padding: 15px;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        text-align: center;
+        width: 90%;
+        max-width: 320px;
+      }
+
+      .popup img {
+        width: 100%;
+        max-width: 220px;
+        border-radius: 15px;
+      }
+
+      .popup h2 {
+        font-size: 20px;
+      }
+
+      .popup p {
+        font-size: 14px;
+      }
+
+      .popup button {
+        margin-top: 10px;
+        padding: 8px 12px;
+        border: none;
+        background: #ff4444;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      .overlay {
+        display: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        top: 0;
+        left: 0;
+        z-index: 999;
+      }
+
+      /* MOBILE OPTIMIZATION */
+      @media (max-width: 480px) {
+        .cloud {
+          font-size: 16px;
+          padding: 8px 10px;
+        }
+
+        .popup {
+          width: 95%;
+          padding: 12px;
+        }
+
+        .popup h2 {
+          font-size: 18px;
+        }
+
+        .popup p {
+          font-size: 13px;
+        }
+      }
+
+      /* FULLSCREEN FEEL */
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        overscroll-behavior: none;
+      }
+
+      /* ANIMASI AWAN */
+      .moving-cloud {
+        position: absolute;
+        top: 0;
+        font-size: 30px;
+        opacity: 0.8;
+        animation: moveCloud linear infinite;
+      }
+
+      @keyframes moveCloud {
+        from {
+          transform: translateX(-10%);
+        }
+        to {
+          transform: translateX(110vw);
+        }
+      }
+    </style>
+  </head>
+  <body onclick="requestFullscreen()">
+    <!-- Awan Bergerak -->
+    <div class="moving-cloud" style="top: 10%; animation-duration: 30s">☁️</div>
+    <div
+      class="moving-cloud"
+      style="top: 25%; animation-duration: 45s; font-size: 40px"
+    >
+      ☁️
+    </div>
+    <div class="moving-cloud" style="top: 50%; animation-duration: 60s">☁️</div>
+    <div
+      class="moving-cloud"
+      style="top: 70%; animation-duration: 35s; font-size: 35px"
+    >
+      ☁️
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Clouds (Hidden triggers) -->
+    <div class="cloud" style="top: 10%; left: 10%" onclick="showPopup('woody')">
+      ☁️
+    </div>
+    <div class="cloud" style="top: 20%; left: 70%" onclick="showPopup('buzz')">
+      ☁️
+    </div>
+    <div class="cloud" style="top: 60%; left: 30%" onclick="showPopup('rex')">
+      ☁️
+    </div>
+    <div class="cloud" style="top: 70%; left: 80%" onclick="showPopup('alien')">
+      ☁️
+    </div>
+    <div
+      class="cloud"
+      style="top: 40%; left: 50%"
+      onclick="showPopup('potato')"
+    >
+      ☁️
+    </div>
+
+    <!-- Popups -->
+    <!-- Random Photo Popup -->
+    <div class="popup" id="photoRandom">
+      <h2>💖 Kenangan Kita</h2>
+      <img id="randomPhoto" src="https://via.placeholder.com/200" />
+      <p id="randomCaption"></p>
+      <button onclick="closePopup()">Tutup</button>
+    </div>
+    <div class="popup" id="woody">
+      <h2>🤠 Woody</h2>
+      <p>"There's a snake in my boot!"</p>
+      <button onclick="closePopup()">Tutup</button>
+    </div>
+
+    <div class="popup" id="buzz">
+      <h2>🚀 Buzz Lightyear</h2>
+      <p>"To infinity and beyond!"</p>
+      <button onclick="closePopup()">Tutup</button>
+    </div>
+
+    <div class="popup" id="rex">
+      <h2>🦖 Rex</h2>
+      <p>Aku dinosaurus tapi penakut 😅</p>
+      <button onclick="closePopup()">Tutup</button>
+    </div>
+
+    <div class="popup" id="alien">
+      <h2>👽 Alien</h2>
+      <p>"The Clawww!"</p>
+      <button onclick="closePopup()">Tutup</button>
+    </div>
+
+    <div class="popup" id="potato">
+      <h2>🥔 Mr. Potato Head</h2>
+      <p>Jangan copot mataku! 👀</p>
+      <button onclick="closePopup()">Tutup</button>
+    </div>
+
+    <script>
+      function showPopup(id) {
+        document.getElementById("overlay").style.display = "block";
+        document.getElementById(id).style.display = "block";
+      }
+
+      function closePopup() {
+        document.getElementById("overlay").style.display = "none";
+        document
+          .querySelectorAll(".popup")
+          .forEach((p) => (p.style.display = "none"));
+      }
+
+      // Popup hanya muncul saat diklik (tidak otomatis)
+      // (auto random popup dinonaktifkan)
+
+      // AUTO FULLSCREEN (user interaction required di mobile)
+      function requestFullscreen() {
+        const el = document.documentElement;
+        if (el.requestFullscreen) el.requestFullscreen();
+      }
+
+      function checkCode() {
+        const input = document.getElementById("secretInput").value;
+        if (input === SECRET_CODE) {
+          closePopup();
+          showPopup("secretPopup");
+        } else {
+          alert("Kode salah 😢");
+        }
+      }
+
+      // tombol akses kode (support HP)
+      function openCodePopup() {
+        showPopup("codePopup");
+      }
+
+      // tetap support keyboard (opsional)
+      window.addEventListener("keydown", (e) => {
+        if (e.key.toLowerCase() === "k") {
+          showPopup("codePopup");
+        }
+      });
+    </script>
+
+    <!-- Anniversary Trigger -->
+    <div class="cloud" style="top: 85%; left: 50%" onclick="showPopup('anniv')">
+      🎁
+    </div>
+
+    <!-- Anniversary Popup -->
+    <div class="popup" id="anniv">
+      <h2>🎉 Happy Anniversary 🎉</h2>
+      <img
+        id="annivPhoto"
+        src="https://via.placeholder.com/200"
+        style="width: 200px; border-radius: 15px; margin: 10px 0"
+      />
+      <p id="annivText"></p>
+      <button onclick="closePopup()">Tutup</button>
+    </div>
+
+    <script>
+      // ===== CUSTOM NAMA, FOTO & PESAN =====
+      const nama1 = "Nama Kamu";
+      const nama2 = "Nadia Jihan Azzahra Aprillia";
+      const fotoList = [
+        "https://via.placeholder.com/300",
+        "https://via.placeholder.com/301",
+        "https://via.placeholder.com/302",
+      ]; // ganti dengan foto kalian
+      const pesanList = [
+        `Terima kasih sudah selalu ada untukku, ${nama2} ❤️`,
+        `${nama2}, aku beruntung bisa mengenal dan memilikimu 💖`,
+        `Setiap hari bersamamu, ${nama2}, adalah hadiah terindah 🎁`,
+        `Aku ingin menua bersamamu, ${nama2} 🥰`,
+        `Cintaku ke kamu, ${nama2}, tidak akan pernah habis 💞`,
+        `${nama2}, kamu adalah rumah terbaik untuk hatiku 🏡❤️`,
+      ];
+
+      function setAnniversaryText() {
+        // set foto anniversary default
+        document.getElementById("annivPhoto").src = fotoList[0];
+        document.getElementById("annivPhoto").src = fotoUrl;
+        const randomPesan =
+          pesanList[Math.floor(Math.random() * pesanList.length)];
+        const text = `Untuk ${nama1} ❤️ ${nama2}<br><br>${randomPesan}`;
+        document.getElementById("annivText").innerHTML = text;
+      }
+
+      // tampilkan otomatis saat pertama buka
+      window.onload = function () {
+        setAnniversaryText();
+        // tidak auto tampil, hanya set data saja
+      };
+    </script>
+
+    <!-- SECRET POPUP -->
+    <div class="popup" id="secretPopup">
+      <h2>🔐 Secret Message</h2>
+      <p>
+        Selamat! Kamu menemukan pesan rahasia 💖<br /><br />Aku sayang kamu
+        lebih dari apapun ❤️
+      </p>
+      <button onclick="closePopup()">Tutup</button>
+    </div>
+
+    <!-- INPUT KODE RAHASIA -->
+    <div class="popup" id="codePopup">
+      <h2>🔑 Masukkan Kode Rahasia</h2>
+      <input
+        id="secretInput"
+        type="password"
+        placeholder="Masukkan kode..."
+        style="
+          padding: 8px;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+          width: 80%;
+        "
+      />
+      <br /><br />
+      <button onclick="checkCode()">Submit</button>
+      <button onclick="closePopup()">Tutup</button>
+    </div>
+
+    <script>
+      // ===== SECRET TRIGGER (klik 5x di mana saja) =====
+      let clickCount = 0;
+      const SECRET_CODE = "1234"; // ganti kode di sini
+      let clickTimer;
+
+      document.body.addEventListener("click", () => {
+        clickCount++;
+
+        clearTimeout(clickTimer);
+        clickTimer = setTimeout(() => {
+          clickCount = 0;
+        }, 1500);
+
+        if (clickCount >= 5) {
+          showPopup("secretPopup");
+          clickCount = 0;
+        }
+      });
+    </script>
+
+    <!-- BUTTON KODE (MOBILE FRIENDLY) -->
+    <div
+      onclick="openCodePopup()"
+      style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #ffcc00;
+        padding: 12px 16px;
+        border-radius: 50px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        font-weight: bold;
+        z-index: 2000;
+        cursor: pointer;
+      "
+    >
+      🔑 Kode
+    </div>
+
+    <!-- MINI GAME KARAKTER -->
+    <div id="gameArea"></div>
+
+    <style>
+      #gameArea {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 500;
+      }
+
+      .character {
+          position: absolute;
+          font-size: 30px;
+          cursor: pointer;
+          pointer-events: auto;
+          animation: moveChar linear forwards;
+      }
+
+      @keyframes moveChar {
+          0% {
+              transform: translateX(-10%) translateY(0px);
+          }
+          50% {
+              transform: translateX(50vw) translateY(-30px);
+          }
+          100% {
+              transform: translateX(110vw) translateY(0px);
+          }
+      }
+          to { transform: translateX(110vw); }
+      }
+    </style>
+
+    <script>
+      // ===== MINI GAME KARAKTER =====
+      const characters = [
+        "buzz.png", // Buzz Lightyear dari gambar kamu
+      ];
+      const gameMessages = [
+        `Aku sayang kamu ❤️`,
+        `${nama2}, kamu segalanya buat aku 💖`,
+        `Jangan lupa senyum ya ${nama2} 😊`,
+        `Selalu ada buat kamu 🥰`,
+        `${nama2}, kamu spesial banget 💞`,
+      ];
+
+      function spawnCharacter() {
+        const el = document.createElement("div");
+        el.className = "character";
+        const img = document.createElement("img");
+        img.src = characters[Math.floor(Math.random() * characters.length)];
+        img.style.width = "60px";
+        img.style.borderRadius = "10px";
+        img.style.background = "transparent";
+        img.style.height = "auto";
+        el.appendChild(img);
+        el.style.top = Math.random() * 80 + "%";
+        el.style.animationDuration = 5 + Math.random() * 5 + "s";
+
+        el.onclick = () => {
+          const msg =
+            gameMessages[Math.floor(Math.random() * gameMessages.length)];
+          alert(msg);
+          el.remove();
+        };
+
+        document.getElementById("gameArea").appendChild(el);
+
+        setTimeout(() => el.remove(), 10000);
+      }
+
+      setInterval(spawnCharacter, 3000);
+    </script>
+  </body>
+</html>
