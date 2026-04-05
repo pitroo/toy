@@ -1,565 +1,258 @@
 <!doctype html>
 <html lang="id">
-  <head>
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <meta charset="UTF-8" />
-    <title>Toy Story Hidden Popups</title>
-    <style>
-        body {
-          <div class="bg-layer"></div>
-    margin: 0;
-    height: 100dvh;
-    background: url("https://pitroo.github.io/toy/13.jpeg") no-repeat center center;
-    background-size: cover;
-    background-attachment: scroll; /* penting untuk HP */
-    font-family: Arial, sans-serif;
-    overflow: hidden;
-    touch-action: manipulation;
-      }
-.bg-layer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Secret Love Page 💖</title>
 
-    background: url("https://pitroo.github.io/toy/13.jpeg") no-repeat center center;
-    background-size: cover;
-
-    z-index: -1;
-    transform: scale(1.05); /* sedikit zoom biar cinematic */
+<style>
+body {
+  margin:0;
+  height:100vh;
+  font-family: Arial;
+  overflow:hidden;
 }
-      .bg-layer::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(255,255,255,0.1);
+
+/* Background */
+.bg {
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:url("https://pitroo.github.io/toy/13.jpeg") center/cover;
+  z-index:-1;
 }
-      .cloud {
-        position: absolute;
-        background: white;
-        border-radius: 50px;
-        padding: 10px 14px;
-        font-size: 20px;
-        cursor: pointer;
-        transition: transform 0.2s;
+
+/* Overlay */
+.overlay {
+  display:none;
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+}
+
+/* Popup */
+.popup {
+  display:none;
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  background:white;
+  padding:20px;
+  border-radius:15px;
+  text-align:center;
+  width:90%;
+  max-width:320px;
+}
+
+/* Text */
+#typingText {
+  color:black;
+  line-height:1.6;
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+<div class="overlay" id="overlay"></div>
+
+<!-- BUTTON SECRET -->
+<div onclick="showPopup('secretPopup')" 
+style="position:fixed;bottom:20px;right:20px;
+background:#ffcc00;padding:12px;border-radius:50px;cursor:pointer;">
+💖
+</div>
+
+<!-- SECRET POPUP -->
+<div class="popup" id="secretPopup">
+  <h2>💌 Untuk Kamu...</h2>
+  <p id="typingText"></p>
+  <button onclick="closePopup()">Tutup</button>
+</div>
+
+<!-- INPUT KODE -->
+<div class="popup" id="codePopup">
+  <h2>🔑 Masukkan Kode</h2>
+  <input id="secretInput" type="password">
+  <br><br>
+  <button onclick="checkCode()">Submit</button>
+</div>
+
+<!-- AUDIO -->
+<audio id="music" loop>
+  <source src="https://files.catbox.moe/9l0q7n.mp3">
+</audio>
+
+<script>
+
+/* =========================
+   SETTING
+========================= */
+const ANNIV_DATE = "04-15"; // GANTI tanggal jadian
+const SECRET_CODE = "150424"; // GANTI kode
+const nomorWA = "6281335798405"; // GANTI nomor pasangan
+
+let unlocked = false;
+
+/* =========================
+   CEK TANGGAL
+========================= */
+function isAnniversary(){
+  const t = new Date();
+  const m = String(t.getMonth()+1).padStart(2,'0');
+  const d = String(t.getDate()).padStart(2,'0');
+  return `${m}-${d}` === ANNIV_DATE;
+}
+
+/* =========================
+   POPUP CONTROL
+========================= */
+function showPopup(id){
+
+  if(!isAnniversary() && !unlocked && id !== "codePopup"){
+    alert("🔒 Tunggu hari spesial kita yaa 💖");
+    return;
+  }
+
+  document.getElementById("overlay").style.display="block";
+  document.getElementById(id).style.display="block";
+
+  if(id==="secretPopup"){
+    startEmotional();
+  }
+}
+
+function closePopup(){
+  document.getElementById("overlay").style.display="none";
+  document.querySelectorAll(".popup").forEach(p=>p.style.display="none");
+  document.getElementById("music").pause();
+}
+
+/* =========================
+   KODE RAHASIA
+========================= */
+function checkCode(){
+  const input = document.getElementById("secretInput").value;
+
+  if(input === SECRET_CODE){
+    unlocked = true;
+    alert("Berhasil dibuka 💖");
+    closePopup();
+  } else {
+    alert("Salah 😢");
+  }
+}
+
+/* =========================
+   EMOTIONAL TEXT
+========================= */
+const messages = [
+"Aku cuma mau bilang sesuatu...",
+"Makasih ya udah bertahan...",
+"Aku tau aku banyak kurang...",
+"Tapi kamu tetap disini...",
+"Itu berarti banget buat aku...",
+"",
+"Aku ga janji hidup selalu mudah...",
+"Tapi aku janji...",
+"Aku ga akan ninggalin kamu...",
+"",
+"Dari semua orang di dunia...",
+"Aku tetap milih kamu...",
+"Setiap hari...",
+"",
+"Aku sayang kamu ❤️"
+];
+
+function startEmotional(){
+  playMusic();
+  typeText(messages);
+}
+
+function typeText(lines){
+  const el = document.getElementById("typingText");
+  el.innerHTML="";
+  let i=0,j=0;
+
+  function typing(){
+    if(i<lines.length){
+      if(j<lines[i].length){
+        el.innerHTML+=lines[i][j];
+        j++;
+        setTimeout(typing,40);
+      } else {
+        el.innerHTML+="<br><br>";
+        i++; j=0;
+        setTimeout(typing,600);
       }
+    } else {
+      showFinal();
+    }
+  }
 
-      .cloud:hover {
-        transform: scale(1.1);
-      }
+  typing();
+}
 
-      .popup {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: #fff;
-        border: 4px solid #ffcc00;
-        padding: 15px;
-        border-radius: 15px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-        z-index: 1000;
-        text-align: center;
-        width: 90%;
-        max-width: 320px;
-      }
+/* =========================
+   FINAL + WA
+========================= */
+function showFinal(){
+  const el = document.getElementById("typingText");
 
-      .popup img {
-        width: 100%;
-        max-width: 220px;
-        border-radius: 15px;
-      }
+  const final = document.createElement("div");
+  final.innerHTML="I LOVE YOU 💖";
+  final.style.marginTop="20px";
+  final.style.fontSize="22px";
 
-      .popup h2 {
-        font-size: 20px;
-      }
+  el.appendChild(final);
 
-      .popup p {
-        font-size: 14px;
-      }
+  const btn = document.createElement("button");
+  btn.innerText="Kirim ke Kamu 💌";
+  btn.onclick=sendWA;
 
-      .popup button {
-        margin-top: 10px;
-        padding: 8px 12px;
-        border: none;
-        background: #ff4444;
-        color: white;
-        border-radius: 8px;
-        cursor: pointer;
-      }
+  el.appendChild(btn);
+}
 
-      .overlay {
-        display: none;
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        top: 0;
-        left: 0;
-        z-index: 999;
-      }
+function sendWA(){
+  const text = "Aku sayang kamu ❤️";
+  const url = `https://wa.me/${nomorWA}?text=${encodeURIComponent(text)}`;
+  window.open(url,"_blank");
+}
 
-      /* MOBILE OPTIMIZATION */
-      @media (max-width: 480px) {
-        .cloud {
-          font-size: 16px;
-          padding: 8px 10px;
-        }
+/* =========================
+   MUSIC
+========================= */
+function playMusic(){
+  const m = document.getElementById("music");
+  m.volume=0;
+  m.play();
 
-        .popup {
-          width: 95%;
-          padding: 12px;
-        }
+  let v=0;
+  const fade=setInterval(()=>{
+    if(v<1){
+      v+=0.05;
+      m.volume=v;
+    } else clearInterval(fade);
+  },200);
+}
 
-        .popup h2 {
-          font-size: 18px;
-        }
+/* =========================
+   AUTO OPEN DI HARI H
+========================= */
+window.onload = function(){
+  if(isAnniversary()){
+    setTimeout(()=>{
+      showPopup("secretPopup");
+    },1000);
+  } else {
+    alert("💌 Ini hadiah buat kamu... tapi belum waktunya hehe🥺");
+  }
+};
 
-        .popup p {
-          font-size: 13px;
-        }
-      }
+</script>
 
-      /* FULLSCREEN FEEL */
-      html,
-      body {
-        height: 100%;
-      }
-
-      body {
-        overscroll-behavior: none;
-      }
-
-      /* ANIMASI AWAN */
-      .moving-cloud {
-        position: absolute;
-        top: 0;
-        font-size: 30px;
-        opacity: 0.8;
-        animation: moveCloud linear infinite;
-      }
-
-      @keyframes moveCloud {
-        from {
-          transform: translateX(-10%);
-        }
-        to {
-          transform: translateX(110vw);
-        }
-      }
-    </style>
-  </head>
-  <body onclick="requestFullscreen()">
-    <!-- Awan Bergerak -->
-    <div class="moving-cloud" style="top: 10%; animation-duration: 30s">☁️</div>
-    <div
-      class="moving-cloud"
-      style="top: 25%; animation-duration: 45s; font-size: 40px"
-    >
-      ☁️
-    </div>
-    <div class="moving-cloud" style="top: 50%; animation-duration: 60s">☁️</div>
-    <div
-      class="moving-cloud"
-      style="top: 70%; animation-duration: 35s; font-size: 35px"
-    >
-      ☁️
-    </div>
-
-    <div class="overlay" id="overlay"></div>
-
-    <!-- Clouds (Hidden triggers) -->
-    <div class="cloud" style="top: 10%; left: 10%" onclick="showPopup('woody')">
-      ☁️
-    </div>
-    <div class="cloud" style="top: 20%; left: 70%" onclick="showPopup('buzz')">
-      ☁️
-    </div>
-    <div class="cloud" style="top: 60%; left: 30%" onclick="showPopup('rex')">
-      ☁️
-    </div>
-    <div class="cloud" style="top: 70%; left: 80%" onclick="showPopup('alien')">
-      ☁️
-    </div>
-    <div
-      class="cloud"
-      style="top: 40%; left: 50%"
-      onclick="showPopup('potato')"
-    >
-      ☁️
-    </div>
-    <div class="cloud" style="top: 30%; left: 20%" onclick="showPopup('gallery')">
-      📸
-    </div>
-
-    <!-- Popups -->
-    <!-- Random Photo Popup -->
-    <div class="popup" id="photoRandom">
-      <h2>💖 Kenangan Kita</h2>
-      <img id="randomPhoto" src="https://pitroo.github.io/toy/8.jpeg" />
-      <p id="randomCaption"></p>
-      <button onclick="closePopup()">Tutup</button>
-    </div>
-    <div class="popup" id="woody">
-      <h2>🤠 Woody</h2>
-      <p>"There's a snake in my boot hmm!"</p>
-      <button onclick="prevPopup()">Previous</button>
-      <button onclick="nextPopup()">Next</button>
-      <button onclick="closePopup()">Tutup</button>
-    </div>
-
-    <div class="popup" id="buzz">
-      <h2>🚀 Buzz Lightyear</h2>
-      <p>"To infinity and beyond Cimuttt!"</p>
-      <button onclick="prevPopup()">Previous</button>
-      <button onclick="nextPopup()">Next</button>
-      <button onclick="closePopup()">Tutup</button>
-    </div>
-
-    <div class="popup" id="rex">
-      <h2>🦖 Rex</h2>
-      <p>Aku dinosaurus tapi penakut RAAAWWWR 😅</p>
-      <button onclick="prevPopup()">Previous</button>
-      <button onclick="nextPopup()">Next</button>
-      <button onclick="closePopup()">Tutup</button>
-    </div>
-
-    <div class="popup" id="alien">
-      <h2>👽 Alien</h2>
-      <p>"The Clawww Cimut menakutkan!"</p>
-      <button onclick="prevPopup()">Previous</button>
-      <button onclick="nextPopup()">Next</button>
-      <button onclick="closePopup()">Tutup</button>
-    </div>
-
-    <div class="popup" id="potato">
-      <h2>🥔 Mr. Potato Head</h2>
-      <p>Jangan copot mataku , Ini matakuu! 👀</p>
-      <button onclick="prevPopup()">Previous</button>
-      <button onclick="nextPopup()">Next</button>
-      <button onclick="closePopup()">Tutup</button>
-    </div>
-
-    <!-- Gallery Popup -->
-    <div class="popup" id="gallery">
-      <h2>📸 Galeri Kenangan</h2>
-      <img id="galleryImage" src="https://pitroo.github.io/toy/1.jpeg" style="width: 100%; max-width: 250px; border-radius: 15px;" />
-      <p id="galleryCaption">Foto 1 dari galeri</p>
-      <button onclick="prevImage()">Previous Image</button>
-      <button onclick="nextImage()">Next Image</button>
-      <button onclick="closePopup()">Tutup</button>
-    </div>
-
-    <script>
-      const popupSlides = ['woody', 'buzz', 'rex', 'alien', 'potato'];
-      let currentSlideIndex = -1;
-
-      const galleryImages = [
-        "https://pitroo.github.io/toy/1.jpeg",
-        "https://pitroo.github.io/toy/2.jpeg",
-        "https://pitroo.github.io/toy/4.jpeg",
-        "https://pitroo.github.io/toy/8.jpeg",
-        "https://pitroo.github.io/toy/9.jpeg",
-        "https://pitroo.github.io/toy/13.jpeg"
-      ];
-      let currentImageIndex = 0;
-
-      function showPopup(id) {
-        document.getElementById("overlay").style.display = "block";
-        document.getElementById(id).style.display = "block";
-        currentSlideIndex = popupSlides.indexOf(id);
-        updateNavButtons();
-        if (id === 'gallery') {
-          updateGalleryImage();
-        }
-      }
-
-      function closePopup() {
-        document.getElementById("overlay").style.display = "none";
-        document
-          .querySelectorAll(".popup")
-          .forEach((p) => (p.style.display = "none"));
-        currentSlideIndex = -1;
-      }
-
-      function nextPopup() {
-        if (currentSlideIndex >= 0 && currentSlideIndex < popupSlides.length - 1) {
-          document.getElementById(popupSlides[currentSlideIndex]).style.display = "none";
-          currentSlideIndex++;
-          document.getElementById(popupSlides[currentSlideIndex]).style.display = "block";
-          updateNavButtons();
-        }
-      }
-
-      function prevPopup() {
-        if (currentSlideIndex > 0) {
-          document.getElementById(popupSlides[currentSlideIndex]).style.display = "none";
-          currentSlideIndex--;
-          document.getElementById(popupSlides[currentSlideIndex]).style.display = "block";
-          updateNavButtons();
-        }
-      }
-
-      function updateNavButtons() {
-        if (currentSlideIndex >= 0) {
-          const popup = document.getElementById(popupSlides[currentSlideIndex]);
-          const prevBtn = popup.querySelector('button[onclick="prevPopup()"]');
-          const nextBtn = popup.querySelector('button[onclick="nextPopup()"]');
-          if (prevBtn) prevBtn.style.display = currentSlideIndex === 0 ? 'none' : 'inline-block';
-          if (nextBtn) nextBtn.style.display = currentSlideIndex === popupSlides.length - 1 ? 'none' : 'inline-block';
-        }
-      }
-
-      function nextImage() {
-        currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
-        updateGalleryImage();
-      }
-
-      function prevImage() {
-        currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
-        updateGalleryImage();
-      }
-
-      function updateGalleryImage() {
-        document.getElementById('galleryImage').src = galleryImages[currentImageIndex];
-        document.getElementById('galleryCaption').textContent = `Foto ${currentImageIndex + 1} dari ${galleryImages.length}`;
-      }
-
-      // Popup hanya muncul saat diklik (tidak otomatis)
-      // (auto random popup dinonaktifkan)
-
-      // AUTO FULLSCREEN (user interaction required di mobile)
-      function requestFullscreen() {
-        const el = document.documentElement;
-        if (el.requestFullscreen) el.requestFullscreen();
-      }
-
-      function checkCode() {
-        const input = document.getElementById("secretInput").value;
-        if (input === SECRET_CODE) {
-          closePopup();
-          showPopup("secretPopup");
-        } else {
-          alert("Kode salah 😢");
-        }
-      }
-
-      // tombol akses kode (support HP)
-      function openCodePopup() {
-        showPopup("codePopup");
-      }
-
-      // tetap support keyboard (opsional)
-      window.addEventListener("keydown", (e) => {
-        if (e.key.toLowerCase() === "k") {
-          showPopup("codePopup");
-        }
-      });
-    </script>
-
-    <!-- Anniversary Trigger -->
-    <div class="cloud" style="top: 85%; left: 50%" onclick="showPopup('anniv')">
-      🎁
-    </div>
-
-    <!-- Anniversary Popup -->
-    <div class="popup" id="anniv">
-      <h2>🎉 Happy Anniversary 3 🎉</h2>
-      <img
-        id="annivPhoto"
-        src="https://pitroo.github.io/toy/4.jpeg"
-        style="width: 200px; border-radius: 15px; margin: 10px 0"
-      />
-      <p id="annivText"></p>
-      <button onclick="closePopup()">Tutup</button>
-    </div>
-
-    <script>
-      // ===== CUSTOM NAMA, FOTO & PESAN =====
-      const nama1 = "Nama Kamu";
-      const nama2 = "Nadia Jihan Azzahra Aprillia";
-      const fotoList = [
-        "https://pitroo.github.io/toy/9.jpeg",
-        "https://pitroo.github.io/toy/2.jpeg",
-        "https://pitroo.github.io/toy/1.jpeg",
-      ]; // ganti dengan foto kalian
-      const pesanList = [
-        `Terima kasih sudah selalu ada untukku,Sayaangku ${nama2} ❤️`,
-        `${nama2}, aku beruntung bisa mengenal dan memilikimu Cimuttkuu 💖`,
-        `Setiap hari bersamamu, ${nama2}, adalah hadiah terindah di hidup emoyy🎁`,
-        `Aku ingin menua bersamamu, Okaaaayy!?! ${nama2} 🥰`,
-        `Cintaku ke kamu, ${nama2}, tidak akan pernah habis hehehe 💞`,
-        `${nama2}, kamu adalah rumah terbaik untuk hatiku Lovee 99999%🏡❤️`,
-      ];
-
-      function setAnniversaryText() {
-        // set foto anniversary default
-        document.getElementById("annivPhoto").src = fotoList[0];
-        document.getElementById("annivPhoto").src = fotoUrl;
-        const randomPesan =
-          pesanList[Math.floor(Math.random() * pesanList.length)];
-        const text = `Untuk ${nama1} ❤️ ${nama2}<br><br>${randomPesan}`;
-        document.getElementById("annivText").innerHTML = text;
-      }
-
-      // tampilkan otomatis saat pertama buka
-      window.onload = function () {
-        setAnniversaryText();
-        // tidak auto tampil, hanya set data saja
-      };
-    </script>
-
-    <!-- SECRET POPUP -->
-    <div class="popup" id="secretPopup">
-      <h2>🔐 Secret Message</h2>
-      <p>
-        Selamat! Kamu menemukan pesan rahasia emoyyy 💖<br /><br />Aku sayang kamu
-        lebih dari apapun sayaangg, jangan pernah lupakaaan ituuu yaaa sayaanggg❤️
-      </p>
-      <button onclick="closePopup()">Tutup</button>
-    </div>
-
-    <!-- INPUT KODE RAHASIA -->
-    <div class="popup" id="codePopup">
-      <h2>🔑 Masukkan Kode Rahasia</h2>
-      <input
-        id="secretInput"
-        type="password"
-        placeholder="15 april 2024"
-        style="
-          padding: 8px;
-          border-radius: 8px;
-          border: 1px solid #ccc;
-          width: 80%;
-        "
-      />
-      <br /><br />
-      <button onclick="checkCode()">Submit</button>
-      <button onclick="closePopup()">Tutup</button>
-    </div>
-
-    <script>
-      // ===== SECRET TRIGGER (klik 5x di mana saja) =====
-      let clickCount = 0;
-      const SECRET_CODE = "1234"; // ganti kode di sini
-      let clickTimer;
-
-      document.body.addEventListener("click", () => {
-        clickCount++;
-
-        clearTimeout(clickTimer);
-        clickTimer = setTimeout(() => {
-          clickCount = 0;
-        }, 1500);
-
-        if (clickCount >= 5) {
-          showPopup("secretPopup");
-          clickCount = 0;
-        }
-      });
-    </script>
-
-    <!-- BUTTON KODE (MOBILE FRIENDLY) -->
-    <div
-      onclick="openCodePopup()"
-      style="
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: #ffcc00;
-        padding: 12px 16px;
-        border-radius: 50px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        font-weight: bold;
-        z-index: 2000;
-        cursor: pointer;
-      "
-    >
-      🔑 Kode
-    </div>
-
-    <!-- MINI GAME KARAKTER -->
-    <div id="gameArea"></div>
-
-    <style>
-      #gameArea {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          pointer-events: none;
-          z-index: 500;
-      }
-
-      .character {
-          position: absolute;
-          font-size: 30px;
-          cursor: pointer;
-          pointer-events: auto;
-          animation: moveChar linear forwards;
-      }
-
-      @keyframes moveChar {
-          0% {
-              transform: translateX(-10%) translateY(0px);
-          }
-          50% {
-              transform: translateX(50vw) translateY(-30px);
-          }
-          100% {
-              transform: translateX(110vw) translateY(0px);
-          }
-      }
-          to { transform: translateX(110vw); }
-      }
-    </style>
-
-    <script>
-      // ===== MINI GAME KARAKTER =====
-      const characters = [
-        "buzz.png", // Buzz Lightyear dari gambar kamu
-      ];
-      const gameMessages = [
-        `Aku sayang kamu ❤️`,
-        `${nama2}, kamu segalanya buat aku 💖`,
-        `Jangan lupa senyum ya ${nama2} 😊`,
-        `Selalu ada buat kamu 🥰`,
-        `${nama2}, kamu spesial banget 💞`,
-      ];
-
-      function spawnCharacter() {
-        const el = document.createElement("div");
-        el.className = "character";
-        const img = document.createElement("img");
-        img.src = characters[Math.floor(Math.random() * characters.length)];
-        img.style.width = "60px";
-        img.style.borderRadius = "10px";
-        img.style.background = "transparent";
-        img.style.height = "auto";
-        el.appendChild(img);
-        el.style.top = Math.random() * 80 + "%";
-        el.style.animationDuration = 5 + Math.random() * 5 + "s";
-
-        el.onclick = () => {
-          const msg =
-            gameMessages[Math.floor(Math.random() * gameMessages.length)];
-          alert(msg);
-          el.remove();
-        };
-
-        document.getElementById("gameArea").appendChild(el);
-
-        setTimeout(() => el.remove(), 10000);
-      }
-
-      setInterval(spawnCharacter, 3000);
-    </script>
-  </body>
+</body>
 </html>
