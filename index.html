@@ -3,52 +3,70 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
-<title>Secret Love Page 💖</title>
+<title>Toy Story Secret 💖</title>
 
 <style>
 body {
-  margin:0;
-  height:100vh;
-  font-family: Arial;
-  overflow:hidden;
+  margin: 0;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
 }
 
-/* Background */
-.bg {
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:url("https://pitroo.github.io/toy/13.jpeg") center/cover;
-  z-index:-1;
+.bg-layer {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: url("https://pitroo.github.io/toy/13.jpeg") center/cover;
+  z-index: -1;
+  transform: scale(1.05);
 }
 
-/* Overlay */
 .overlay {
-  display:none;
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.7);
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 999;
 }
 
-/* Popup */
+.cloud {
+  position: absolute;
+  background: white;
+  padding: 10px;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+/* popup */
 .popup {
-  display:none;
-  position:fixed;
+  display: none;
+  position: fixed;
   top:50%;
   left:50%;
-  transform:translate(-50%,-50%);
-  background:white;
-  padding:20px;
-  border-radius:15px;
-  text-align:center;
+  transform: translate(-50%,-50%);
+  background: white;
+  padding: 15px;
+  border-radius: 15px;
+  text-align: center;
+  z-index: 1000;
   width:90%;
   max-width:320px;
 }
 
-/* Text */
+.moving-cloud {
+  position:absolute;
+  animation: moveCloud linear infinite;
+}
+
+@keyframes moveCloud {
+  from {transform: translateX(-10%)}
+  to {transform: translateX(110vw)}
+}
+
+/* typing */
 #typingText {
-  color:black;
   line-height:1.6;
 }
 </style>
@@ -56,34 +74,46 @@ body {
 
 <body>
 
-<div class="bg"></div>
+<div class="bg-layer"></div>
 <div class="overlay" id="overlay"></div>
 
-<!-- BUTTON SECRET -->
-<div onclick="showPopup('secretPopup')" 
-style="position:fixed;bottom:20px;right:20px;
-background:#ffcc00;padding:12px;border-radius:50px;cursor:pointer;">
+<!-- awan -->
+<div class="moving-cloud" style="top:10%;animation-duration:30s">☁️</div>
+<div class="moving-cloud" style="top:40%;animation-duration:50s">☁️</div>
+
+<!-- tombol secret -->
+<div class="cloud" style="top:80%;left:50%" onclick="showPopup('secretPopup')">
 💖
 </div>
 
-<!-- SECRET POPUP -->
+<!-- popup karakter (tetap ada tapi dikunci) -->
+<div class="popup" id="woody"><h2>Woody 🤠</h2><button onclick="closePopup()">Tutup</button></div>
+<div class="popup" id="buzz"><h2>Buzz 🚀</h2><button onclick="closePopup()">Tutup</button></div>
+
+<!-- secret -->
 <div class="popup" id="secretPopup">
-  <h2>💌 Untuk Kamu...</h2>
-  <p id="typingText"></p>
-  <button onclick="closePopup()">Tutup</button>
+<h2>💌 Untuk Kamu...</h2>
+<p id="typingText"></p>
+<button onclick="closePopup()">Tutup</button>
 </div>
 
-<!-- INPUT KODE -->
+<!-- kode -->
 <div class="popup" id="codePopup">
-  <h2>🔑 Masukkan Kode</h2>
-  <input id="secretInput" type="password">
-  <br><br>
-  <button onclick="checkCode()">Submit</button>
+<h2>🔑 Masukkan Kode</h2>
+<input id="secretInput" type="password">
+<br><br>
+<button onclick="checkCode()">Submit</button>
 </div>
 
-<!-- AUDIO -->
+<!-- tombol kode -->
+<div onclick="showPopup('codePopup')" 
+style="position:fixed;bottom:20px;right:20px;background:#ffcc00;padding:10px;border-radius:50px;cursor:pointer;">
+🔑
+</div>
+
+<!-- audio -->
 <audio id="music" loop>
-  <source src="https://files.catbox.moe/9l0q7n.mp3">
+<source src="https://files.catbox.moe/9l0q7n.mp3">
 </audio>
 
 <script>
@@ -91,10 +121,8 @@ background:#ffcc00;padding:12px;border-radius:50px;cursor:pointer;">
 /* =========================
    SETTING
 ========================= */
-const ANNIV_DATE = "04-15"; // GANTI tanggal jadian
-const SECRET_CODE = "150424"; // GANTI kode
-const nomorWA = "6281335798405"; // GANTI nomor pasangan
-
+const ANNIV_DATE = "04-15"; // ganti tanggal
+const SECRET_CODE = "150424";
 let unlocked = false;
 
 /* =========================
@@ -113,7 +141,7 @@ function isAnniversary(){
 function showPopup(id){
 
   if(!isAnniversary() && !unlocked && id !== "codePopup"){
-    alert("🔒 Tunggu hari spesial kita yaa 💖");
+    alert("💌 Ini hadiah buat kamu... tapi belum waktunya yaaa🥺");
     return;
   }
 
@@ -132,7 +160,7 @@ function closePopup(){
 }
 
 /* =========================
-   KODE RAHASIA
+   KODE
 ========================= */
 function checkCode(){
   const input = document.getElementById("secretInput").value;
@@ -142,7 +170,7 @@ function checkCode(){
     alert("Berhasil dibuka 💖");
     closePopup();
   } else {
-    alert("Salah 😢");
+    alert("Kode salah wlee😢");
   }
 }
 
@@ -150,18 +178,19 @@ function checkCode(){
    EMOTIONAL TEXT
 ========================= */
 const messages = [
-"Aku cuma mau bilang sesuatu...",
-"Makasih ya udah bertahan...",
+"Hei kamu...",
+"Makasih ya udah bertahan sama aku 🥺",
+"",
 "Aku tau aku banyak kurang...",
 "Tapi kamu tetap disini...",
+"",
 "Itu berarti banget buat aku...",
 "",
 "Aku ga janji hidup selalu mudah...",
 "Tapi aku janji...",
 "Aku ga akan ninggalin kamu...",
 "",
-"Dari semua orang di dunia...",
-"Aku tetap milih kamu...",
+"Aku akan tetap milih kamu...",
 "Setiap hari...",
 "",
 "Aku sayang kamu ❤️"
@@ -188,38 +217,10 @@ function typeText(lines){
         i++; j=0;
         setTimeout(typing,600);
       }
-    } else {
-      showFinal();
     }
   }
 
   typing();
-}
-
-/* =========================
-   FINAL + WA
-========================= */
-function showFinal(){
-  const el = document.getElementById("typingText");
-
-  const final = document.createElement("div");
-  final.innerHTML="I LOVE YOU 💖";
-  final.style.marginTop="20px";
-  final.style.fontSize="22px";
-
-  el.appendChild(final);
-
-  const btn = document.createElement("button");
-  btn.innerText="Kirim ke Kamu 💌";
-  btn.onclick=sendWA;
-
-  el.appendChild(btn);
-}
-
-function sendWA(){
-  const text = "Aku sayang kamu ❤️";
-  const url = `https://wa.me/${nomorWA}?text=${encodeURIComponent(text)}`;
-  window.open(url,"_blank");
 }
 
 /* =========================
@@ -240,7 +241,7 @@ function playMusic(){
 }
 
 /* =========================
-   AUTO OPEN DI HARI H
+   AUTO OPEN
 ========================= */
 window.onload = function(){
   if(isAnniversary()){
@@ -248,7 +249,7 @@ window.onload = function(){
       showPopup("secretPopup");
     },1000);
   } else {
-    alert("💌 Ini hadiah buat kamu... tapi belum waktunya hehe🥺");
+    alert("💖 Tunggu yaa... ini akan terbuka di hari spesial kita okaayyy? 🥺");
   }
 };
 
