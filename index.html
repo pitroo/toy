@@ -194,6 +194,9 @@
     >
       ☁️
     </div>
+    <div class="cloud" style="top: 30%; left: 20%" onclick="showPopup('gallery')">
+      📸
+    </div>
 
     <!-- Popups -->
     <!-- Random Photo Popup -->
@@ -206,37 +209,75 @@
     <div class="popup" id="woody">
       <h2>🤠 Woody</h2>
       <p>"There's a snake in my boot hmm!"</p>
+      <button onclick="prevPopup()">Previous</button>
+      <button onclick="nextPopup()">Next</button>
       <button onclick="closePopup()">Tutup</button>
     </div>
 
     <div class="popup" id="buzz">
       <h2>🚀 Buzz Lightyear</h2>
       <p>"To infinity and beyond Cimuttt!"</p>
+      <button onclick="prevPopup()">Previous</button>
+      <button onclick="nextPopup()">Next</button>
       <button onclick="closePopup()">Tutup</button>
     </div>
 
     <div class="popup" id="rex">
       <h2>🦖 Rex</h2>
       <p>Aku dinosaurus tapi penakut RAAAWWWR 😅</p>
+      <button onclick="prevPopup()">Previous</button>
+      <button onclick="nextPopup()">Next</button>
       <button onclick="closePopup()">Tutup</button>
     </div>
 
     <div class="popup" id="alien">
       <h2>👽 Alien</h2>
       <p>"The Clawww Cimut menakutkan!"</p>
+      <button onclick="prevPopup()">Previous</button>
+      <button onclick="nextPopup()">Next</button>
       <button onclick="closePopup()">Tutup</button>
     </div>
 
     <div class="popup" id="potato">
       <h2>🥔 Mr. Potato Head</h2>
       <p>Jangan copot mataku , Ini matakuu! 👀</p>
+      <button onclick="prevPopup()">Previous</button>
+      <button onclick="nextPopup()">Next</button>
+      <button onclick="closePopup()">Tutup</button>
+    </div>
+
+    <!-- Gallery Popup -->
+    <div class="popup" id="gallery">
+      <h2>📸 Galeri Kenangan</h2>
+      <img id="galleryImage" src="https://pitroo.github.io/toy/1.jpeg" style="width: 100%; max-width: 250px; border-radius: 15px;" />
+      <p id="galleryCaption">Foto 1 dari galeri</p>
+      <button onclick="prevImage()">Previous Image</button>
+      <button onclick="nextImage()">Next Image</button>
       <button onclick="closePopup()">Tutup</button>
     </div>
 
     <script>
+      const popupSlides = ['woody', 'buzz', 'rex', 'alien', 'potato'];
+      let currentSlideIndex = -1;
+
+      const galleryImages = [
+        "https://pitroo.github.io/toy/1.jpeg",
+        "https://pitroo.github.io/toy/2.jpeg",
+        "https://pitroo.github.io/toy/4.jpeg",
+        "https://pitroo.github.io/toy/8.jpeg",
+        "https://pitroo.github.io/toy/9.jpeg",
+        "https://pitroo.github.io/toy/13.jpeg"
+      ];
+      let currentImageIndex = 0;
+
       function showPopup(id) {
         document.getElementById("overlay").style.display = "block";
         document.getElementById(id).style.display = "block";
+        currentSlideIndex = popupSlides.indexOf(id);
+        updateNavButtons();
+        if (id === 'gallery') {
+          updateGalleryImage();
+        }
       }
 
       function closePopup() {
@@ -244,6 +285,50 @@
         document
           .querySelectorAll(".popup")
           .forEach((p) => (p.style.display = "none"));
+        currentSlideIndex = -1;
+      }
+
+      function nextPopup() {
+        if (currentSlideIndex >= 0 && currentSlideIndex < popupSlides.length - 1) {
+          document.getElementById(popupSlides[currentSlideIndex]).style.display = "none";
+          currentSlideIndex++;
+          document.getElementById(popupSlides[currentSlideIndex]).style.display = "block";
+          updateNavButtons();
+        }
+      }
+
+      function prevPopup() {
+        if (currentSlideIndex > 0) {
+          document.getElementById(popupSlides[currentSlideIndex]).style.display = "none";
+          currentSlideIndex--;
+          document.getElementById(popupSlides[currentSlideIndex]).style.display = "block";
+          updateNavButtons();
+        }
+      }
+
+      function updateNavButtons() {
+        if (currentSlideIndex >= 0) {
+          const popup = document.getElementById(popupSlides[currentSlideIndex]);
+          const prevBtn = popup.querySelector('button[onclick="prevPopup()"]');
+          const nextBtn = popup.querySelector('button[onclick="nextPopup()"]');
+          if (prevBtn) prevBtn.style.display = currentSlideIndex === 0 ? 'none' : 'inline-block';
+          if (nextBtn) nextBtn.style.display = currentSlideIndex === popupSlides.length - 1 ? 'none' : 'inline-block';
+        }
+      }
+
+      function nextImage() {
+        currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+        updateGalleryImage();
+      }
+
+      function prevImage() {
+        currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+        updateGalleryImage();
+      }
+
+      function updateGalleryImage() {
+        document.getElementById('galleryImage').src = galleryImages[currentImageIndex];
+        document.getElementById('galleryCaption').textContent = `Foto ${currentImageIndex + 1} dari ${galleryImages.length}`;
       }
 
       // Popup hanya muncul saat diklik (tidak otomatis)
