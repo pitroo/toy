@@ -3,131 +3,149 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
-<title>Toy Story Secret 💖</title>
+<title>Untuk cimut ❤️</title>
 
 <style>
-body {
-  margin: 0;
-  height: 100vh;
-  font-family: Arial, sans-serif;
-  overflow: hidden;
+body{
+  margin:0;
+  background:black;
+  overflow:hidden;
+  font-family:'Segoe UI',sans-serif;
+  color:white;
 }
 
-.bg-layer {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: url("https://pitroo.github.io/toy/13.jpeg") center/cover;
-  z-index: -1;
-  transform: scale(1.05);
+.start{
+  position:fixed;
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  text-align:center;
+  z-index:10;
 }
 
-.overlay {
-  display: none;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  z-index: 999;
+#game{display:none;width:100%;height:100%;position:fixed;}
+
+.heart{
+  position:absolute;
+  font-size:28px;
+  animation:float 4s linear;
+}
+@keyframes float{
+  from{transform:translateY(100vh)}
+  to{transform:translateY(-10vh)}
 }
 
-.cloud {
-  position: absolute;
-  background: white;
-  padding: 10px;
-  border-radius: 50px;
-  cursor: pointer;
+.screen{display:none;position:fixed;width:100%;height:100%;}
+
+.slide{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:2s;
 }
 
-/* popup */
-.popup {
-  display: none;
-  position: fixed;
+.overlay{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:linear-gradient(to top, rgba(0,0,0,0.95), transparent);
+}
+
+.text{
+  position:absolute;
+  bottom:100px;
+  left:20px;
+  right:20px;
+  font-size:20px;
+  line-height:1.6;
+}
+
+.chat{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  padding:10px;
+  display:none;
+}
+
+.bubble{
+  background:#25D366;
+  color:black;
+  padding:8px 12px;
+  border-radius:15px;
+  margin:5px 0;
+  width:max-content;
+  max-width:70%;
+}
+
+.final{
+  position:absolute;
   top:50%;
   left:50%;
-  transform: translate(-50%,-50%);
-  background: white;
-  padding: 15px;
-  border-radius: 15px;
-  text-align: center;
-  z-index: 1000;
-  width:90%;
-  max-width:320px;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  font-size:26px;
+  opacity:0;
+  transition:2s;
 }
 
-.moving-cloud {
-  position:absolute;
-  animation: moveCloud linear infinite;
-}
-
-@keyframes moveCloud {
-  from {transform: translateX(-10%)}
-  to {transform: translateX(110vw)}
-}
-
-/* typing */
-#typingText {
-  line-height:1.6;
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:20px;
+  background:#ff4d6d;
+  color:white;
 }
 </style>
 </head>
 
 <body>
 
-<div class="bg-layer"></div>
-<div class="overlay" id="overlay"></div>
-
-<!-- awan -->
-<div class="moving-cloud" style="top:10%;animation-duration:30s">☁️</div>
-<div class="moving-cloud" style="top:40%;animation-duration:50s">☁️</div>
-
-<!-- tombol secret -->
-<div class="cloud" style="top:80%;left:50%" onclick="showPopup('secretPopup')">
-💖
+<div class="start" id="startScreen">
+  <h2>💖 Aku punya sesuatu buat kamu tauuu...</h2>
+  <button onclick="startGame()">Mulai</button>
+  <br><br>
+  <button onclick="openCode()">🔑</button>
 </div>
 
-<!-- popup karakter (tetap ada tapi dikunci) -->
-<div class="popup" id="woody"><h2>Woody 🤠</h2><button onclick="closePopup()">Tutup</button></div>
-<div class="popup" id="buzz"><h2>Buzz 🚀</h2><button onclick="closePopup()">Tutup</button></div>
-
-<!-- secret -->
-<div class="popup" id="secretPopup">
-<h2>💌 Untuk Kamu...</h2>
-<p id="typingText"></p>
-<button onclick="closePopup()">Tutup</button>
+<!-- INPUT KODE -->
+<div id="codeBox" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;color:black;padding:20px;border-radius:10px;z-index:20;">
+  <h3>Masukkan Kode</h3>
+  <input id="codeInput" type="password">
+  <br><br>
+  <button onclick="checkCode()">Submit</button>
 </div>
 
-<!-- kode -->
-<div class="popup" id="codePopup">
-<h2>🔑 Masukkan Kode</h2>
-<input id="secretInput" type="password">
-<br><br>
-<button onclick="checkCode()">Submit</button>
+<div id="game"></div>
+
+<div class="screen">
+  <img id="slide" class="slide">
+  <div class="overlay"></div>
+  <div class="text" id="text"></div>
+  <div class="chat" id="chat"></div>
+  <div class="final" id="final"></div>
 </div>
 
-<!-- tombol kode -->
-<div onclick="showPopup('codePopup')" 
-style="position:fixed;bottom:20px;right:20px;background:#ffcc00;padding:10px;border-radius:50px;cursor:pointer;">
-🔑
-</div>
-
-<!-- audio -->
 <audio id="music" loop>
 <source src="https://files.catbox.moe/9l0q7n.mp3">
 </audio>
 
+<audio id="voice">
+<source src="VOICE_NOTE_KAMU.mp3">
+</audio>
+
 <script>
 
-/* =========================
-   SETTING
-========================= */
-const ANNIV_DATE = "04-15"; // ganti tanggal
-const SECRET_CODE = "150424";
+/* ================= ANNIVERSARY LOCK ================= */
+const ANNIV_DATE = "04-15"; // ganti tanggal jadian (MM-DD)
+const SECRET_CODE = "150424"; // kode bypass
 let unlocked = false;
 
-/* =========================
-   CEK TANGGAL
-========================= */
 function isAnniversary(){
   const t = new Date();
   const m = String(t.getMonth()+1).padStart(2,'0');
@@ -135,123 +153,191 @@ function isAnniversary(){
   return `${m}-${d}` === ANNIV_DATE;
 }
 
-/* =========================
-   POPUP CONTROL
-========================= */
-function showPopup(id){
+function openCode(){
+  document.getElementById("codeBox").style.display="block";
+}
 
-  if(!isAnniversary() && !unlocked && id !== "codePopup"){
-    alert("💌 Ini hadiah buat kamu... tapi belum waktunya yaaa🥺");
+function checkCode(){
+  const val = document.getElementById("codeInput").value;
+  if(val === SECRET_CODE){
+    unlocked = true;
+    alert("Berhasil dibuka 💖");
+    document.getElementById("codeBox").style.display="none";
+  } else {
+    alert("Kode salah WLEE 😢");
+  }
+}
+
+/* ================= GAME ================= */
+let score=0;
+
+function startGame(){
+  if(!isAnniversary() && !unlocked){
+    alert("💌 Tunggu ya... ini cuma bisa dibuka di hari spesial kita HEHE 🥺");
     return;
   }
 
-  document.getElementById("overlay").style.display="block";
-  document.getElementById(id).style.display="block";
+  document.getElementById("startScreen").style.display="none";
+  document.getElementById("game").style.display="block";
 
-  if(id==="secretPopup"){
-    startEmotional();
-  }
+  const int=setInterval(()=>{
+    spawn();
+    if(score>=6){
+      clearInterval(int);
+      setTimeout(startStory,1500);
+    }
+  },800);
 }
 
-function closePopup(){
-  document.getElementById("overlay").style.display="none";
-  document.querySelectorAll(".popup").forEach(p=>p.style.display="none");
-  document.getElementById("music").pause();
+function spawn(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="💖";
+  h.style.left=Math.random()*90+"vw";
+
+  h.onclick=()=>{score++;h.remove();};
+
+  document.getElementById("game").appendChild(h);
+  setTimeout(()=>h.remove(),4000);
 }
 
-/* =========================
-   KODE
-========================= */
-function checkCode(){
-  const input = document.getElementById("secretInput").value;
-
-  if(input === SECRET_CODE){
-    unlocked = true;
-    alert("Berhasil dibuka 💖");
-    closePopup();
-  } else {
-    alert("Kode salah wlee😢");
-  }
-}
-
-/* =========================
-   EMOTIONAL TEXT
-========================= */
-const messages = [
-"Hei kamu...",
-"Makasih ya udah bertahan sama aku 🥺",
-"",
-"Aku tau aku banyak kurang...",
-"Tapi kamu tetap disini...",
-"",
-"Itu berarti banget buat aku...",
-"",
-"Aku ga janji hidup selalu mudah...",
-"Tapi aku janji...",
-"Aku ga akan ninggalin kamu...",
-"",
-"Aku akan tetap milih kamu...",
-"Setiap hari...",
-"",
-"Aku sayang kamu ❤️"
+/* ================= STORY ================= */
+const story=[
+  {img:"https://picsum.photos/id/1011/500/900", text:"Cimutt inget ga... pertama kita kenal?"},
+  {img:"https://picsum.photos/id/1015/500/900", text:"Dari SMA... sampai sekarang kita masih disini..."},
+  {img:"https://picsum.photos/id/1016/500/900", text:"Kita banyak banget berantem..."},
+  {img:"https://picsum.photos/id/1020/500/900", text:"Cimutt sering overthinking... "},
+  {img:"https://picsum.photos/id/1024/500/900", text:"Jangan sering sering lagii yaa... ada akuu disinii..."}
 ];
 
-function startEmotional(){
+let i=0;
+
+function startStory(){
+  document.getElementById("game").style.display="none";
+  document.querySelector(".screen").style.display="block";
   playMusic();
-  typeText(messages);
+  next();
 }
 
-function typeText(lines){
-  const el = document.getElementById("typingText");
-  el.innerHTML="";
-  let i=0,j=0;
+function next(){
+  const slide=document.getElementById("slide");
+  const text=document.getElementById("text");
 
-  function typing(){
-    if(i<lines.length){
-      if(j<lines[i].length){
-        el.innerHTML+=lines[i][j];
-        j++;
-        setTimeout(typing,40);
-      } else {
-        el.innerHTML+="<br><br>";
-        i++; j=0;
-        setTimeout(typing,600);
-      }
+  slide.style.opacity=0;
+  text.innerHTML="";
+
+  setTimeout(()=>{
+    slide.src=story[i].img;
+    slide.style.opacity=1;
+    typeText(story[i].text,text);
+
+    i++;
+    if(i<story.length){
+      setTimeout(next,4500);
+    } else {
+      setTimeout(showChat,4000);
+    }
+
+  },800);
+}
+
+/* ================= TYPING ================= */
+function typeText(str,el){
+  let j=0;
+  function t(){
+    if(j<str.length){
+      el.innerHTML+=str[j];
+      j++;
+      setTimeout(t,40);
+    }
+  }
+  t();
+}
+
+/* ================= CHAT ================= */
+const chats=[
+  "cimutt lagi apaaa?",
+  "Emoyy kangen 🥺",
+  "jangan pergi ya...",
+  "Emoyy butuh Cimutt"
+];
+
+function showChat(){
+  const chatBox=document.getElementById("chat");
+  chatBox.style.display="block";
+
+  let k=0;
+
+  function nextChat(){
+    if(k<chats.length){
+      const b=document.createElement("div");
+      b.className="bubble";
+      b.innerText=chats[k];
+      chatBox.appendChild(b);
+      k++;
+      setTimeout(nextChat,1800);
+    } else {
+      setTimeout(playVoice,2500);
     }
   }
 
-  typing();
+  nextChat();
 }
 
-/* =========================
-   MUSIC
-========================= */
-function playMusic(){
+/* ================= AUTO SYNC VOICE ================= */
+let voiceDuration = 0;
+const voice = document.getElementById("voice");
+
+voice.addEventListener("loadedmetadata", () => {
+  voiceDuration = voice.duration;
+});
+
+function playVoice(){
+  const v = document.getElementById("voice");
   const m = document.getElementById("music");
+
+  let fadeDown = setInterval(()=>{
+    if(m.volume > 0.2){
+      m.volume -= 0.05;
+    } else clearInterval(fadeDown);
+  },200);
+
+  v.play();
+
+  setTimeout(()=>{
+    showFinal();
+  }, (voiceDuration * 1000) + 500);
+
+  v.onended = () => {
+    showFinal();
+  };
+}
+
+/* ================= FINAL ================= */
+function showFinal(){
+  const f=document.getElementById("final");
+  f.innerHTML=
+  "Emoyy ga sempurna...<br><br>" +
+  "Tapi Emoyy berusaha jadi yang terbaik...<br><br>" +
+  "<b>Emoyy sayang Cimutt ❤️</b>";
+
+  f.style.opacity=1;
+}
+
+/* ================= MUSIC ================= */
+function playMusic(){
+  const m=document.getElementById("music");
   m.volume=0;
   m.play();
 
   let v=0;
   const fade=setInterval(()=>{
     if(v<1){
-      v+=0.05;
+      v+=0.03;
       m.volume=v;
     } else clearInterval(fade);
   },200);
 }
-
-/* =========================
-   AUTO OPEN
-========================= */
-window.onload = function(){
-  if(isAnniversary()){
-    setTimeout(()=>{
-      showPopup("secretPopup");
-    },1000);
-  } else {
-    alert("💖 Tunggu yaa... ini akan terbuka di hari spesial kita okaayyy? 🥺");
-  }
-};
 
 </script>
 
