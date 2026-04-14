@@ -5,12 +5,15 @@
 <meta charset="UTF-8">
 <title>Untuk cimut ❤️</title>
 
+<!-- FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500&family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
 body{
   margin:0;
   background:black;
   overflow:hidden;
-  font-family:'Segoe UI',sans-serif;
+  font-family:'Poppins', sans-serif;
   color:white;
 }
 
@@ -26,13 +29,43 @@ body{
   z-index:10;
 }
 
-#game{display:none;width:100%;height:100%;position:fixed;}
+.start h2{
+  font-family:'Playfair Display', serif;
+  font-size:28px;
+  letter-spacing:1px;
+}
 
+/* ===== MINIGAME WALLPAPER ===== */
+#game{
+  display:none;
+  width:100%;
+  height:100%;
+  position:fixed;
+
+  background:url('https://picsum.photos/800/1600?blur=3') no-repeat center center;
+  background-size:cover;
+}
+
+/* overlay gelap biar estetik */
+#game::after{
+  content:'';
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  top:0;
+  left:0;
+  z-index:0;
+}
+
+/* HEART DI ATAS */
 .heart{
   position:absolute;
   font-size:28px;
   animation:float 4s linear;
+  z-index:2;
 }
+
 @keyframes float{
   from{transform:translateY(100vh)}
   to{transform:translateY(-10vh)}
@@ -63,6 +96,7 @@ body{
   right:20px;
   font-size:20px;
   line-height:1.6;
+  font-weight:300;
 }
 
 .chat{
@@ -76,11 +110,13 @@ body{
 .bubble{
   background:#25D366;
   color:black;
-  padding:8px 12px;
+  padding:10px 14px;
   border-radius:15px;
   margin:5px 0;
   width:max-content;
   max-width:70%;
+  font-family:'Quicksand', sans-serif;
+  font-size:14px;
 }
 
 .final{
@@ -89,9 +125,10 @@ body{
   left:50%;
   transform:translate(-50%,-50%);
   text-align:center;
-  font-size:26px;
+  font-size:28px;
   opacity:0;
   transition:2s;
+  font-family:'Playfair Display', serif;
 }
 
 button{
@@ -100,6 +137,8 @@ button{
   border-radius:20px;
   background:#ff4d6d;
   color:white;
+  font-family:'Poppins', sans-serif;
+  font-weight:500;
 }
 </style>
 </head>
@@ -113,7 +152,6 @@ button{
   <button onclick="openCode()">🔑</button>
 </div>
 
-<!-- INPUT KODE -->
 <div id="codeBox" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;color:black;padding:20px;border-radius:10px;z-index:20;">
   <h3>Masukkan Kode</h3>
   <input id="codeInput" type="password">
@@ -140,10 +178,8 @@ button{
 </audio>
 
 <script>
-
-/* ================= ANNIVERSARY LOCK ================= */
-const ANNIV_DATE = "04-15"; // ganti tanggal jadian (MM-DD)
-const SECRET_CODE = "150424"; // kode bypass
+const ANNIV_DATE = "04-15";
+const SECRET_CODE = "150424";
 let unlocked = false;
 
 function isAnniversary(){
@@ -168,7 +204,6 @@ function checkCode(){
   }
 }
 
-/* ================= GAME ================= */
 let score=0;
 
 function startGame(){
@@ -201,7 +236,6 @@ function spawn(){
   setTimeout(()=>h.remove(),4000);
 }
 
-/* ================= STORY ================= */
 const story=[
   {img:"https://picsum.photos/id/1011/500/900", text:"Cimutt inget ga... pertama kita kenal?"},
   {img:"https://github.com/pitroo/toy/blob/main/1.jpeg", text:"Dari SMA... sampai sekarang kita masih disini..."},
@@ -237,11 +271,9 @@ function next(){
     } else {
       setTimeout(showChat,4000);
     }
-
   },800);
 }
 
-/* ================= TYPING ================= */
 function typeText(str,el){
   let j=0;
   function t(){
@@ -254,7 +286,6 @@ function typeText(str,el){
   t();
 }
 
-/* ================= CHAT ================= */
 const chats=[
   "cimutt lagi apaaa?",
   "Emoyy kangen 🥺",
@@ -284,7 +315,6 @@ function showChat(){
   nextChat();
 }
 
-/* ================= AUTO SYNC VOICE ================= */
 let voiceDuration = 0;
 const voice = document.getElementById("voice");
 
@@ -313,7 +343,6 @@ function playVoice(){
   };
 }
 
-/* ================= FINAL ================= */
 function showFinal(){
   const f=document.getElementById("final");
   f.innerHTML=
@@ -324,7 +353,6 @@ function showFinal(){
   f.style.opacity=1;
 }
 
-/* ================= MUSIC ================= */
 function playMusic(){
   const m=document.getElementById("music");
   m.volume=0;
@@ -338,7 +366,6 @@ function playMusic(){
     } else clearInterval(fade);
   },200);
 }
-
 </script>
 
 </body>
