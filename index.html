@@ -5,7 +5,6 @@
 <meta charset="UTF-8">
 <title>Untuk cimut ❤️</title>
 
-<!-- FONT -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500&family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
@@ -32,33 +31,26 @@ body{
 .start h2{
   font-family:'Playfair Display', serif;
   font-size:28px;
-  letter-spacing:1px;
 }
 
-/* ===== MINIGAME WALLPAPER ===== */
+/* GAME */
 #game{
   display:none;
   width:100%;
   height:100%;
   position:fixed;
-
-  background:url('https://raw.githubusercontent.com/pitroo/toy/main/13.jpeg') no-repeat center center;
+  background:url('https://raw.githubusercontent.com/pitroo/toy/main/13.jpeg') no-repeat center;
   background-size:cover;
 }
 
-/* overlay gelap biar estetik */
 #game::after{
   content:'';
   position:absolute;
   width:100%;
   height:100%;
   background:rgba(0,0,0,0.5);
-  top:0;
-  left:0;
-  z-index:0;
 }
 
-/* HEART DI ATAS */
 .heart{
   position:absolute;
   font-size:28px;
@@ -95,8 +87,6 @@ body{
   left:20px;
   right:20px;
   font-size:20px;
-  line-height:1.6;
-  font-weight:300;
 }
 
 .chat{
@@ -110,13 +100,10 @@ body{
 .bubble{
   background:#25D366;
   color:black;
-  padding:10px 14px;
+  padding:10px;
   border-radius:15px;
-  margin:5px 0;
-  width:max-content;
+  margin:5px;
   max-width:70%;
-  font-family:'Quicksand', sans-serif;
-  font-size:14px;
 }
 
 .final{
@@ -128,7 +115,6 @@ body{
   font-size:28px;
   opacity:0;
   transition:2s;
-  font-family:'Playfair Display', serif;
 }
 
 button{
@@ -137,8 +123,6 @@ button{
   border-radius:20px;
   background:#ff4d6d;
   color:white;
-  font-family:'Poppins', sans-serif;
-  font-weight:500;
 }
 </style>
 </head>
@@ -152,7 +136,7 @@ button{
   <button onclick="openCode()">🔑</button>
 </div>
 
-<div id="codeBox" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;color:black;padding:20px;border-radius:10px;z-index:20;">
+<div id="codeBox" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;color:black;padding:20px;border-radius:10px;">
   <h3>Masukkan Kode</h3>
   <input id="codeInput" type="password">
   <br><br>
@@ -169,8 +153,9 @@ button{
   <div class="final" id="final"></div>
 </div>
 
+<!-- MUSIC -->
 <audio id="music" loop>
-<source src="https://raw.githubusercontent.com/pitroo/toy/main/Bruno Mars - Risk It All Official Music Video.mp3">
+<source src="https://raw.githubusercontent.com/pitroo/toy/main/Bruno%20Mars%20-%20Risk%20It%20All%20Official%20Music%20Video.mp3">
 </audio>
 
 <audio id="voice">
@@ -181,12 +166,12 @@ button{
 const ANNIV_DATE = "04-15";
 const SECRET_CODE = "150424";
 let unlocked = false;
+let musicDuration = 0;
+let slideDelay = 4000;
 
 function isAnniversary(){
   const t = new Date();
-  const m = String(t.getMonth()+1).padStart(2,'0');
-  const d = String(t.getDate()).padStart(2,'0');
-  return `${m}-${d}` === ANNIV_DATE;
+  return `${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}` === ANNIV_DATE;
 }
 
 function openCode(){
@@ -194,21 +179,18 @@ function openCode(){
 }
 
 function checkCode(){
-  const val = document.getElementById("codeInput").value;
-  if(val === SECRET_CODE){
+  if(document.getElementById("codeInput").value === SECRET_CODE){
     unlocked = true;
     alert("Berhasil dibuka 💖");
     document.getElementById("codeBox").style.display="none";
-  } else {
-    alert("Kode salah WLEE 😢");
-  }
+  } else alert("Kode salah 😢");
 }
 
 let score=0;
 
 function startGame(){
   if(!isAnniversary() && !unlocked){
-    alert("💌 Tunggu ya... ini cuma bisa dibuka di hari spesial kita HEHE 🥺");
+    alert("💌 Tunggu hari spesial ya 🥺");
     return;
   }
 
@@ -229,20 +211,25 @@ function spawn(){
   h.className="heart";
   h.innerText="💖";
   h.style.left=Math.random()*90+"vw";
-
   h.onclick=()=>{score++;h.remove();};
-
   document.getElementById("game").appendChild(h);
   setTimeout(()=>h.remove(),4000);
 }
 
 const story=[
   {img:"https://raw.githubusercontent.com/pitroo/toy/main/sma.jpg", text:"Cimutt inget ga... pertama kita kenal?"},
-  {img:"https://raw.githubusercontent.com/pitroo/toy/main/rumah damar.jpg", text:"Dari SMA... sampai sekarang kita masih disini..."},
+  {img:"https://raw.githubusercontent.com/pitroo/toy/main/rumah damar.jpg", text:"Dari SMA sampai sekarang kita masih disini..."},
   {img:"https://raw.githubusercontent.com/pitroo/toy/main/pertama.jpg", text:"Kita banyak banget berantemnya..."},
-  {img:"https://raw.githubusercontent.com/pitroo/toy/main/ultah cimut 1.jpg", text:"jangan pernah bosen sama emoy ya... "},
-  {img:"https://raw.githubusercontent.com/pitroo/toy/main/6.jpeg", text:"Jangan sering sering ovt lagii yaa... ada emoyy engga kemana mana emoy disinii..."}
+  {img:"https://raw.githubusercontent.com/pitroo/toy/main/ultah cimut 1.jpg", text:"jangan pernah bosen sama emoy ya..."},
+  {img:"https://raw.githubusercontent.com/pitroo/toy/main/6.jpeg", text:"Emoyy selalu disini buat kamu..."}
 ];
+
+const music=document.getElementById("music");
+
+music.addEventListener("loadedmetadata",()=>{
+  musicDuration=music.duration;
+  slideDelay=(musicDuration*1000-8000)/story.length;
+});
 
 let i=0;
 
@@ -267,103 +254,60 @@ function next(){
 
     i++;
     if(i<story.length){
-      setTimeout(next,4500);
+      setTimeout(next,slideDelay);
     } else {
-      setTimeout(showChat,4000);
+      setTimeout(showChat,2000);
     }
   },800);
 }
 
 function typeText(str,el){
   let j=0;
-  function t(){
+  (function t(){
     if(j<str.length){
-      el.innerHTML+=str[j];
-      j++;
+      el.innerHTML+=str[j++];
       setTimeout(t,40);
     }
-  }
-  t();
+  })();
 }
 
-const chats=[
-  "cimutt lagi apaaa?",
-  "Emoyy kangen 🥺",
-  "jangan pernah bosen sama emoyy yaa...",
-  "Emoyy butuh Cimutt"
-];
+const chats=["cimutt lagi apaaa?","Emoyy kangen 🥺","jangan bosen yaa...","Emoyy butuh Cimutt"];
 
 function showChat(){
-  const chatBox=document.getElementById("chat");
-  chatBox.style.display="block";
-
+  const box=document.getElementById("chat");
+  box.style.display="block";
   let k=0;
-
-  function nextChat(){
+  (function loop(){
     if(k<chats.length){
-      const b=document.createElement("div");
+      let b=document.createElement("div");
       b.className="bubble";
-      b.innerText=chats[k];
-      chatBox.appendChild(b);
-      k++;
-      setTimeout(nextChat,1800);
-    } else {
-      setTimeout(playVoice,2500);
-    }
-  }
-
-  nextChat();
-}
-
-let voiceDuration = 0;
-const voice = document.getElementById("voice");
-
-voice.addEventListener("loadedmetadata", () => {
-  voiceDuration = voice.duration;
-});
-
-function playVoice(){
-  const v = document.getElementById("voice");
-  const m = document.getElementById("music");
-
-  let fadeDown = setInterval(()=>{
-    if(m.volume > 0.2){
-      m.volume -= 0.05;
-    } else clearInterval(fadeDown);
-  },200);
-
-  v.play();
-
-  setTimeout(()=>{
-    showFinal();
-  }, (voiceDuration * 1000) + 500);
-
-  v.onended = () => {
-    showFinal();
-  };
+      b.innerText=chats[k++];
+      box.appendChild(b);
+      setTimeout(loop,1500);
+    } else setTimeout(showFinal,3000);
+  })();
 }
 
 function showFinal(){
   const f=document.getElementById("final");
-  f.innerHTML=
-  "Emoyy ga sempurna...<br><br>" +
-  "Tapi Emoyy berusaha jadi yang terbaik...<br><br>" +
-  "<b>Emoyy sayang Cimutt ❤️</b>";
-
+  f.innerHTML="Emoyy ga sempurna...<br><br>Tapi selalu berusaha...<br><br><b>Emoyy sayang Cimutt ❤️</b>";
   f.style.opacity=1;
+
+  let m=document.getElementById("music");
+  let fade=setInterval(()=>{
+    if(m.volume>0.05){m.volume-=0.03;}
+    else{m.pause();clearInterval(fade);}
+  },200);
 }
 
 function playMusic(){
   const m=document.getElementById("music");
   m.volume=0;
   m.play();
-
   let v=0;
-  const fade=setInterval(()=>{
-    if(v<1){
-      v+=0.03;
-      m.volume=v;
-    } else clearInterval(fade);
+  let fade=setInterval(()=>{
+    if(v<1){v+=0.03;m.volume=v;}
+    else clearInterval(fade);
   },200);
 }
 </script>
